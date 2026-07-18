@@ -1,0 +1,14 @@
+Final Accuracy: 0.9363
+Final Precision: 0.8836
+Final Recall: 1.0000
+Final F1 Score: 0.9382
+Final ROC-AUC: 0.9862
+------------------------------
+              precision    recall  f1-score   support
+
+         0.0       1.00      0.88      0.93       259
+         1.0       0.88      1.00      0.94       243
+
+    accuracy                           0.94       502
+   macro avg       0.94      0.94      0.94       502
+weighted avg       0.94      0.94      0.94       502

@@ -1,0 +1,2 @@
+cd E:\AI_Predictive_Maintenance_Project\aipro
+.\run_system.ps1

@@ -1,0 +1,77 @@
+# ==============================================================================
+# Git Ignore Rules for AI Predictive Maintenance Project
+# ==============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+pyvenv.cfg
+.python-version
+
+# Node / Frontend dependencies & builds
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# IDEs and OS Files
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Log files and reports
+*.log
+aipro/demo_log.txt
+aipro/demo_log_clean.txt
+
+# Large Dataset Folders (Original raw media, audio, and large datasets)
+datasets/IPAD Video Dataset/
+datasets/Sound_Dataset/
+datasets/RUL_project/data/
+
+# Intermediate Generated Features / Datasets
+**/results/*.csv
+**/results/*.png
+**/results/*.txt
+!**/results/README.md  # Keep placeholder readmes if any
+AI_Predictive_Maintenance_Audio/results/
+
+# Model Files, Weights, and Checkpoints (Large binaries)
+*.pth
+*.pt
+*.pkl
+*.joblib
+*.onnx
+*.h5
+*.pb
+
+# Ignore JSON files only inside model or checkpoints folders (do not ignore package.json, etc.)
+**/checkpoints/*.json
+**/models/*.json
+
+# Temporary Uploads / Runtime files
+**/temp_uploads/
+**/temp_rul_uploads/
+**/temp_*.wav
+temp_*.wav
+aipro/interface/backend/temp_uploads/
+aipro/interface/backend/temp_rul_uploads/
+AI_Predictive_Maintenance_Audio/api/temp_*.wav
