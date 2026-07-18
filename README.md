@@ -1,91 +1,61 @@
-# AI Predictive Maintenance Suite
+# AI Predictive Maintenance Suite &bull; Demo Branch
 
-A research-grade, unified Predictive Maintenance Suite integrating three diagnostic modalities:
-1.  **Video Anomaly Detection**: Deep learning-based real-time analysis of machine operation video frames.
-2.  **Audio Anomaly Detection**: Acoustic analysis using unsupervised Isolation Forests trained on extracted MFCC (Mel-Frequency Cepstral Coefficients) features.
-3.  **Remaining Useful Life (RUL) Prediction**: Profile-aware Remaining Useful Life estimation of NASA Turbofan Engines using Gradient Boosted Trees (XGBoost).
-
-All modules expose RESTful APIs using **FastAPI** and are visualized within a unified **Vite + React + Tailwind CSS** frontend dashboard.
-
----
-
-## Workspace Structure
-
-The project is structured as follows:
-
-```text
-AI_Predictive_Maintenance_Project/
-├── aipro/                              # Main workspace
-│   ├── interface/
-│   │   ├── backend/                    # FastAPI services
-│   │   │   ├── main.py                 # Video API (Port 8000)
-│   │   │   └── rul_backend.py          # RUL API (Port 8002)
-│   │   └── frontend/                   # React dashboard (Vite + Tailwind)
-│   ├── ipad_anomaly_detection/         # Video Anomaly DL models & training
-│   ├── run_system.ps1                  # Orchestrator script to start all services
-│   └── update_paths.py                 # Path calibration script
-│
-├── AI_Predictive_Maintenance_Audio/    # Audio maintenance module
-│   ├── api/
-│   │   └── main.py                     # Audio API (Port 8001)
-│   ├── models/                         # Audio model weights (.pkl)
-│   └── src/                            # Feature extraction and training scripts
-│
-└── datasets/                           # Data workspace
-    ├── IPAD Video Dataset/             # Video dataset sequences
-    ├── Sound_Dataset/                  # Audio recordings (.wav)
-    └── RUL_project/                    # NASA Turbofan RUL code and datasets
-```
-
----
-
-## Port Allocation
-
-*   **Port 5173 / 3000**: Main Frontend (Vite)
-*   **Port 8000**: Video Anomaly Backend (FastAPI)
-*   **Port 8001**: Audio Anomaly Backend (FastAPI)
-*   **Port 8002**: Remaining Useful Life Backend (FastAPI)
-
----
-
-## Setup & Dependencies
-
-### Python Environment & Version Compatibility
-This project requires **Python 3.10**. 
 > [!IMPORTANT]
-> The deep learning models require matched versions of PyTorch and Torchvision. If they are mismatched, you will encounter `RuntimeError: operator torchvision::nms does not exist`.
-
-The verified, compatible versions are:
-*   **PyTorch**: `2.13.0`
-*   **Torchvision**: `0.28.0`
-
-Install requirements globally or in your virtual environment:
-```bash
-pip install torch==2.13.0 torchvision==0.28.0
-pip install fastapi uvicorn python-multipart librosa pandas scikit-learn joblib xgboost opencv-python matplotlib seaborn tqdm
-```
-
-If you wish to use GPU acceleration with your NVIDIA graphics card:
-```bash
-pip install torch==2.13.0 torchvision==0.28.0 --index-url https://download.pytorch.org/whl/cu126
-```
-
-### Frontend Environment
-Navigate to the frontend directory and install dependencies:
-```bash
-cd aipro/interface/frontend
-npm install
-```
+> **Looking for the Full Research Code?**
+> This branch (`demo`) contains the **frontend-only interactive demonstration** optimized for lightweight web hosting (like Vercel). To access the complete research codebase, backend microservices, trained model weights, and datasets, switch to the **`main` branch**:
+> ```bash
+> git checkout main
+> ```
 
 ---
 
-## How to Launch the Suite
+## About the Demo Version
 
-To spin up all backend services and open the frontend dashboard automatically, run the unified orchestrator script from the root workspace:
+This deployment is an **interactive client-side simulation** of the unified AI Predictive Maintenance Suite. It reproduces the entire user experience, workflows, pipeline animations, and results without requiring any backend servers, GPU inference resources, or massive local datasets.
 
-```powershell
-cd aipro
-.\run_system.ps1
+### What is Simulated on this Branch:
+1.  **Video Anomaly Detection**: Simulates the 6-stage deep learning visual pipeline (*Frame Extraction &bull; ResNet CNN encoding &bull; BiLSTM sequence analysis &bull; Temporal Attention weighting &bull; XGBoost classification*) using built-in metadata profiles.
+2.  **Audio Anomaly Detection**: Simulates MFCC spectral extraction and Isolation Forest outlier scoring on fan acoustic signatures.
+3.  **Prognostics (Remaining Useful Life)**: Simulates sensor feature engineering, standardization, and XGBoost regression cycles for NASA Turbofan engines.
+
+All pages, diagrams, results, and dashboards render inside **React** with smooth **Framer Motion** transitions and a custom unified design system in **Footlight MT Light** typography.
+
+---
+
+## How to Run the Demo Locally
+
+Ensure you have **Node.js** installed on your system.
+
+1.  **Navigate to the Frontend Directory**:
+    ```bash
+    cd aipro/interface/frontend
+    ```
+2.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
+3.  **Launch the Local Development Server**:
+    ```bash
+    npm run dev
+    ```
+4.  Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## Switching to the Main Branch
+
+To see the original backend configs, training scripts, datasets, and microservice APIs, check out the `main` branch:
+
+```bash
+# Switch to the main branch containing the full ML pipeline
+git checkout main
 ```
 
-The script will launch separate terminal instances for each FastAPI backend on ports `8000`, `8001`, and `8002`, and start the Vite dev server for the dashboard.
+### What is in the `main` branch:
+*   **Deep Learning Models**: Spatial ResNet encoder and Bidirectional LSTM + Attention models in PyTorch.
+*   **FastAPI Backends**: REST APIs for Video Anomaly Detection (Port 8000), Audio Anomaly Detection (Port 8001), and NASA Turbofan RUL Prediction (Port 8002).
+*   **Training & Evaluation Pipelines**: TQDM-driven training loops, confusion matrix plotting, ROC-AUC calculations, and training history logs.
+*   **Original Industrial Datasets**:
+    *   **IPAD Dataset**: Video frames representing various machine failure and normal modes.
+    *   **MIMII Dataset**: Fan acoustic profiles under varying signal-to-noise ratios.
+    *   **NASA C-MAPSS Logs**: Sensory logs representing engine run-to-failure cycles (FD001 - FD004).

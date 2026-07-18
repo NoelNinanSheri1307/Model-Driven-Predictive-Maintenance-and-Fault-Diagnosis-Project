@@ -1,13 +1,41 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ShieldAlert, ShieldCheck, Settings, RefreshCw,
   Loader2, Activity, Terminal, ArrowLeft, Database,
-  UploadCloud, FileAudio, Waves
+  FileAudio, Waves
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
 
-const API_BASE_URL = "http://localhost:8001";
+const AUDIO_DEMO_DATA = {
+  "NormalAudio1.wav": {
+    result: "Normal State",
+    score: 0.082,
+    anomaly_percentage: 18.5,
+    details: "MFCC features extracted successfully. Unsupervised Isolation Forest registers acoustic signatures well within healthy parameters. No signs of structural wear, scraping, or friction spikes.",
+    raw_log: "Extracted 40 MFCCs.\nRaw Isolation Forest score (decision_function): 0.0820\nAnomaly percentage: 18.5%\nFinal result: Normal\nHealth status: SAFE\nMachine Model ID: Industrial Fan Unit 00"
+  },
+  "AbnormalAudio1.wav": {
+    result: "Anomaly Detected",
+    score: -0.421,
+    anomaly_percentage: 92.1,
+    details: "High-frequency peak matching outer-race bearing fault discovered. Unsupervised Isolation Forest indicates severe acoustic deviations. Immediate bearing lubrication or replacement suggested.",
+    raw_log: "Extracted 40 MFCCs.\nRaw Isolation Forest score (decision_function): -0.4210\nAnomaly percentage: 92.1%\nFinal result: Anomaly Detected\nHealth status: CRITICAL\nMachine Model ID: Industrial Fan Unit 02"
+  },
+  "AbnormalAudio3.wav": {
+    result: "Anomaly Detected",
+    score: -0.285,
+    anomaly_percentage: 78.5,
+    details: "Acoustic signal registers signature of rotor misalignment or bearing friction anomalies. Plan a diagnostic check on fan shaft torque mounting plates.",
+    raw_log: "Extracted 40 MFCCs.\nRaw Isolation Forest score (decision_function): -0.2850\nAnomaly percentage: 78.5%\nFinal result: Anomaly Detected\nHealth status: WARNING\nMachine Model ID: Industrial Fan Unit 04"
+  },
+  "AbnormalAudio5.wav": {
+    result: "Anomaly Detected",
+    score: -0.344,
+    anomaly_percentage: 84.4,
+    details: "Subtle cyclic rubbing acoustic spikes detected. Suggests mesh gear contact anomalies. Inspect mechanical teeth wear or clearances.",
+    raw_log: "Extracted 40 MFCCs.\nRaw Isolation Forest score (decision_function): -0.3440\nAnomaly percentage: 84.4%\nFinal result: Anomaly Detected\nHealth status: WARNING\nMachine Model ID: Industrial Fan Unit 06"
+  }
+};
 
 const AUDIO_MACHINES = [
   { name: "Industrial Fan", id: "ID: 00", desc: "Acoustic signature for Fan Unit 00" },
@@ -16,44 +44,90 @@ const AUDIO_MACHINES = [
   { name: "Industrial Fan", id: "ID: 06", desc: "Acoustic signature for Fan Unit 06" }
 ];
 
+const SAMPLE_AUDIOS = [
+  { filename: "NormalAudio1.wav", label: "Normal Audio Sample 1", size: "2.4 MB" },
+  { filename: "AbnormalAudio1.wav", label: "Abnormal Audio Sample 1", size: "2.4 MB" },
+  { filename: "AbnormalAudio3.wav", label: "Abnormal Audio Sample 2", size: "2.4 MB" },
+  { filename: "AbnormalAudio5.wav", label: "Abnormal Audio Sample 3", size: "2.4 MB" }
+];
+
 function AudioAnalyzer({ onBack }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [dragActive, setDragActive] = useState(false);
   const [showRaw, setShowRaw] = useState(false);
   const fileInputRef = useRef(null);
 
+  const steps = [
+    "Uploading audio logs...",
+    "Extracting 40 MFCC feature dimensions...",
+    "Running Isolation Forest outlier logic...",
+    "Computing structural anomaly score...",
+    "Acoustic classification complete."
+  ];
+
+  useEffect(() => {
+    let interval;
+    if (loading) {
+      setLoadingStep(0);
+      interval = setInterval(() => {
+        setLoadingStep((prev) => {
+          if (prev < steps.length - 1) {
+            return prev + 1;
+          } else {
+            clearInterval(interval);
+            const response = getSimulatedResponse(file.name);
+            setResult(response);
+            setLoading(false);
+            return prev;
+          }
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  const getSimulatedResponse = (filename) => {
+    const match = Object.keys(AUDIO_DEMO_DATA).find(
+      key => filename.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(filename.toLowerCase())
+    );
+    if (match) {
+      return AUDIO_DEMO_DATA[match];
+    }
+    if (filename.toLowerCase().includes('anomaly') || filename.toLowerCase().includes('abnormal') || filename.toLowerCase().includes('fault')) {
+      return AUDIO_DEMO_DATA["AbnormalAudio1.wav"];
+    }
+    return AUDIO_DEMO_DATA["NormalAudio1.wav"];
+  };
+
   const handleFile = (selectedFile) => {
-    if (selectedFile?.type?.includes('audio') || selectedFile?.name.endsWith('.wav') || selectedFile?.name.endsWith('.mp3')) {
+    if (selectedFile) {
       setFile(selectedFile);
       setResult(null);
       setError(null);
-    } else {
-      setError("Upload error: Please use .wav or .mp3 formats");
     }
   };
 
-  const analyzeAudio = async () => {
+  const selectDemoSample = (sample) => {
+    const dummyFile = {
+      name: sample.filename,
+      size: parseFloat(sample.size) * 1024 * 1024
+    };
+    setFile(dummyFile);
+    setResult(null);
+    setError(null);
+  };
+
+  const analyzeAudio = () => {
     if (!file) return;
     setLoading(true);
-    setError(null);
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await axios.post(`${API_BASE_URL}/analyze-audio`, formData);
-      setResult(response.data);
-    } catch (err) {
-      setError("System offline: Audio Analyzer disconnected (Port 8001)");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
-    <div className="min-h-screen text-white selection:bg-purple-500/30 pb-32 relative bg-black">
+    <div className="min-h-screen text-white selection:bg-purple-500/30 pb-32 relative bg-black pt-20">
       <div className="max-w-6xl mx-auto px-6 pt-12">
         {/* Header */}
         <header className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 mb-16 border-b border-white/10 pb-10">
@@ -62,11 +136,14 @@ function AudioAnalyzer({ onBack }) {
               <ArrowLeft className="w-6 h-6 text-purple-400 group-hover:-translate-x-1 transition-transform" />
             </button>
             <div className="bg-black border border-purple-500/50 p-3 rounded-lg">
-              <Settings className="w-8 h-8 text-purple-400" />
+              <Waves className="w-8 h-8 text-purple-400" />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight m-0">
-              <span className="text-purple-500">Audio</span> Anomaly Detection
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight m-0">
+                <span className="text-purple-500">Audio</span> Anomaly Detection
+              </h1>
+              <p className="text-xs text-white/40 tracking-wider font-mono uppercase mt-0.5">Simulation Node: MFCC-Isolation-Forest</p>
+            </div>
           </div>
 
           <div className="text-center md:text-right max-w-sm">
@@ -80,28 +157,40 @@ function AudioAnalyzer({ onBack }) {
           <div className="w-full">
             {!file ? (
               <div className="space-y-12">
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className={`glass rounded-2xl p-16 flex flex-col items-center border-[1px] transition-all duration-300 cursor-pointer ${dragActive ? "border-purple-400 bg-purple-900/10 shadow-[0_0_20px_rgba(168,85,247,0.1)]" : "border-white/20 hover:border-purple-500/50"
-                    }`}
-                  onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
-                  onDragLeave={() => setDragActive(false)}
-                  onDrop={(e) => { e.preventDefault(); setDragActive(false); handleFile(e.dataTransfer.files[0]); }}
-                  onClick={() => fileInputRef.current.click()}
+                {/* Demo Audio Selector */}
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="glass rounded-2xl p-10 border-white/5"
                 >
-                  <div className="p-6 bg-black border border-white/10 rounded-full mb-8">
-                    <Waves className="w-12 h-12 text-white/80" />
+                  <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+                    <Database className="w-5 h-5 text-purple-400" />
+                    <h3 className="font-bold text-lg uppercase tracking-widest">Select Demo Audio Samples</h3>
                   </div>
-                  <h2 className="text-2xl font-bold mb-6 text-center leading-relaxed">
-                    Upload Machine Acoustics <br />
-                    <span className="text-white/60">to scan for friction anomalies</span>
-                  </h2>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-purple-400 border border-purple-500/40 px-8 py-4 rounded-xl hover:bg-purple-500 hover:text-white transition-all">
-                    Browse Audio Files
+                  <p className="text-xs text-white/50 mb-6 leading-relaxed">
+                    Test the unsupervised Isolation Forest diagnostics by choosing one of the pre-recorded machine acoustic logs below:
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {SAMPLE_AUDIOS.map((sample, idx) => (
+                      <div 
+                        key={idx} 
+                        onClick={() => selectDemoSample(sample)}
+                        className="bg-black/40 hover:bg-purple-950/10 p-5 rounded-xl border border-white/5 hover:border-purple-500/40 transition-all cursor-pointer group flex flex-col justify-between h-32"
+                      >
+                        <div>
+                          <p className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors leading-snug">{sample.label}</p>
+                          <p className="text-[10px] font-mono text-white/40 mt-1 uppercase">{sample.filename}</p>
+                        </div>
+                        <div className="flex justify-between items-center text-[10px] font-bold text-white/40 tracking-wider">
+                          <span>{sample.size}</span>
+                          <span className="text-purple-400/80 group-hover:text-purple-400">Load &rarr;</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <input ref={fileInputRef} type="file" className="hidden" accept=".wav,.mp3" onChange={(e) => handleFile(e.target.files[0])} />
                 </motion.div>
+
+
 
                 {/* Machine Profiles */}
                 <motion.div
@@ -161,7 +250,7 @@ function AudioAnalyzer({ onBack }) {
                     {loading && (
                       <div className="flex flex-col items-center py-8 gap-6">
                         <Loader2 className="w-10 h-10 text-purple-500 animate-spin" />
-                        <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white italic animate-pulse">Analyzing Spectrograms...</p>
+                        <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-white italic animate-pulse">{steps[loadingStep]}</p>
 
                         {/* Waveform Animation */}
                         <div className="flex items-end gap-1 h-16 w-full justify-center">
@@ -236,16 +325,28 @@ function AudioAnalyzer({ onBack }) {
 
                             <div className="grid grid-cols-2 gap-6 border-y border-white/10 py-8">
                               <div>
-                                <p className="text-[9px] uppercase font-bold text-white/40 mb-1">Raw Model Score</p>
+                                <p className="text-[9px] uppercase font-bold text-white/40 mb-1">Raw Outlier Distance</p>
                                 <p className="text-2xl font-bold tracking-tight text-white">{result.score?.toFixed(4)}</p>
                               </div>
                               <div>
-                                <p className="text-[9px] uppercase font-bold text-white/40 mb-1">Process State</p>
-                                <p className="text-2xl font-bold tracking-tight text-white uppercase">{result.result}</p>
+                                <p className="text-[9px] uppercase font-bold text-white/40 mb-1">Process Severity</p>
+                                <p className={`text-2xl font-bold tracking-tight uppercase ${result.result.includes("Anomaly") ? "text-red-400" : "text-emerald-400"}`}>{result.anomaly_percentage > 80 ? "Critical" : result.anomaly_percentage > 50 ? "Warning" : "Safe"}</p>
                               </div>
                             </div>
 
-                            <p className="text-lg text-white/80 leading-relaxed font-bold">{result.details}</p>
+                            <div className="space-y-2">
+                              <p className="text-[10px] text-white/40 font-mono uppercase tracking-widest">Acoustic Signal Diagnostic</p>
+                              <p className="text-sm text-white/80 leading-relaxed font-bold">{result.details}</p>
+                            </div>
+
+                            <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl space-y-1">
+                              <span className="text-[9px] uppercase tracking-widest font-mono text-purple-400 font-bold">Maintenance Recommendation</span>
+                              <p className="text-xs text-white/60">
+                                {result.result.includes("Anomaly")
+                                  ? "Inspect secondary fan housing and adjust mounting alignments. Reposition gears to remove rub wear issues."
+                                  : "Standard operation metrics. Routine lubrication and wear checks on motor rotor in 80 operation hours."}
+                              </p>
+                            </div>
 
                             <button
                               onClick={() => { setFile(null); setResult(null); setShowRaw(false); }}
@@ -291,7 +392,7 @@ function AudioAnalyzer({ onBack }) {
       </div>
 
       <footer className="mt-24 w-full p-12 flex flex-col items-center gap-2 border-t border-white/10 text-white font-bold uppercase tracking-[0.2em] text-[10px]">
-        <span className="opacity-40">MIMII Dataset Anomaly Detection © 2026</span>
+        <span className="opacity-40">MIMII Dataset Anomaly Detection &bull; Demo Mode</span>
         <span>Noel Ninan | Srinidhi Reddy | Koya Harikrishna</span>
       </footer>
     </div>

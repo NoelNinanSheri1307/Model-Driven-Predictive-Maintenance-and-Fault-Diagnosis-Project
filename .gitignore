@@ -1,77 +1,52 @@
 # ==============================================================================
-# Git Ignore Rules for AI Predictive Maintenance Project
+# Git Ignore Rules - Demo Branch (Frontend Only)
 # ==============================================================================
 
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# Virtual Environments
-venv/
-.venv/
-env/
-ENV/
-pyvenv.cfg
-.python-version
-
-# Node / Frontend dependencies & builds
+# Node / Frontend dependencies & production builds
 node_modules/
 dist/
 dist-ssr/
 *.local
+.env.production
+.env.development
 
-# IDEs and OS Files
+# Logs and debug files
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE / System configurations
 .vscode/
 !.vscode/extensions.json
 .idea/
 .DS_Store
 Thumbs.db
 *.suo
-*.ntvs*
-*.njsproj
-*.sln
+*.user
 *.sw?
 
-# Log files and reports
-*.log
-aipro/demo_log.txt
-aipro/demo_log_clean.txt
+# Byte-compiled python files (in case any exist)
+__pycache__/
+*.pyc
 
-# Large Dataset Folders (Original raw media, audio, and large datasets)
-datasets/IPAD Video Dataset/
-datasets/Sound_Dataset/
-datasets/RUL_project/data/
+# Local Backends & Datasets (Prevent accidental inclusion during manual cleanup)
+datasets/
+AI_Predictive_Maintenance_Audio/
+aipro/interface/backend/
+aipro/ipad_anomaly_detection/
+aipro/frame_classifier/
+aipro/test_samples/
+aipro/*.py
+aipro/*.ps1
+aipro/*.txt
+aipro/demo_log*
 
-# Intermediate Generated Features / Datasets
-**/results/*.csv
-**/results/*.png
-**/results/*.txt
-!**/results/README.md  # Keep placeholder readmes if any
-AI_Predictive_Maintenance_Audio/results/
-
-# Model Files, Weights, and Checkpoints (Large binaries)
-*.pth
-*.pt
-*.pkl
-*.joblib
-*.onnx
-*.h5
-*.pb
-
-# Ignore JSON files only inside model or checkpoints folders (do not ignore package.json, etc.)
-**/checkpoints/*.json
-**/models/*.json
-
-# Temporary Uploads / Runtime files
-**/temp_uploads/
-**/temp_rul_uploads/
-**/temp_*.wav
-temp_*.wav
-aipro/interface/backend/temp_uploads/
-aipro/interface/backend/temp_rul_uploads/
-AI_Predictive_Maintenance_Audio/api/temp_*.wav
+# Recursive model ignores
+**/*.pth
+**/*.pt
+**/*.pkl
+**/*.joblib
+**/*.onnx
+**/*.h5
+**/*.pb

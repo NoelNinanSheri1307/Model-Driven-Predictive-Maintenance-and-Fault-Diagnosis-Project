@@ -7,7 +7,8 @@ import {
   Terminal,
   Activity,
   ChevronRight,
-  Settings
+  Settings,
+  BookOpen
 } from 'lucide-react';
 
 const LandingPage = ({ onSelectMode }) => {
@@ -97,6 +98,43 @@ const LandingPage = ({ onSelectMode }) => {
             </div>
           </motion.div>
         ))}
+      </div>
+
+      {/* Documentation Banner */}
+      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full">
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          onClick={() => onSelectMode('research')}
+          className="glass p-6 rounded-2xl border-white/5 hover:border-purple-500/40 cursor-pointer transition-all flex items-center justify-between"
+        >
+          <div className="flex items-center gap-4 text-left">
+            <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+              <BookOpen className="w-5 h-5 text-purple-400" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm">Read Research Overview</h4>
+              <p className="text-xs text-white/40">Technical paper structure, dataset specifications, and results validation.</p>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-white/30" />
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          onClick={() => onSelectMode('architecture')}
+          className="glass p-6 rounded-2xl border-white/5 hover:border-purple-500/40 cursor-pointer transition-all flex items-center justify-between"
+        >
+          <div className="flex items-center gap-4 text-left">
+            <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-xl">
+              <Settings className="w-5 h-5 text-purple-400" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm">Interactive Pipelines</h4>
+              <p className="text-xs text-white/40">Step-by-step visualizations of video, audio, and prognostics layers.</p>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-white/30" />
+        </motion.div>
       </div>
 
       <footer className="mt-24 text-[11px] font-bold uppercase tracking-widest text-white border-t border-white/10 pt-8 flex flex-col items-center gap-2">
