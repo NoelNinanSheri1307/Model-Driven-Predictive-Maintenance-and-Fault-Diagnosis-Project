@@ -39,12 +39,12 @@ const ResearchPage = ({ onBack }) => {
             <BookOpen className="w-6 h-6 text-purple-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Research & Publications</h1>
-            <p className="text-white/40 text-xs tracking-widest uppercase font-mono mt-0.5">Academic overview & pipeline validation</p>
+            <h1 className="text-2xl font-bold tracking-tight">Methodology & Results</h1>
+            <p className="text-white/40 text-xs tracking-widest uppercase font-mono mt-0.5">Project methodology & pipeline validation</p>
           </div>
         </motion.div>
 
-        {/* Abstract / Paper Header */}
+        {/* Overview Header */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -54,7 +54,7 @@ const ResearchPage = ({ onBack }) => {
           {/* Header Title Block */}
           <motion.div variants={itemVariants} className="text-center py-10 px-8 glass rounded-3xl border-white/5 relative overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent">
             <div className="absolute top-4 left-4 bg-purple-500/10 border border-purple-500/30 px-3 py-1 rounded-full text-[9px] font-mono tracking-widest uppercase text-purple-400">
-              Technical Paper
+              System Specifications
             </div>
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mt-6 mb-4 leading-tight max-w-2xl mx-auto">
               Multi-Modal Deep Learning & Gradient Boosting Suite for Industrial Process Anomaly Detection and Predictive Maintenance
@@ -64,9 +64,9 @@ const ResearchPage = ({ onBack }) => {
             </div>
             <div className="h-[1px] bg-white/10 w-24 mx-auto mb-8" />
             <div className="max-w-2xl mx-auto text-left">
-              <p className="text-sm font-bold text-purple-400/80 uppercase tracking-widest text-center mb-3">Abstract</p>
+              <p className="text-sm font-bold text-purple-400/80 uppercase tracking-widest text-center mb-3">Project Summary</p>
               <p className="text-xs text-white/60 leading-relaxed text-justify">
-                Modern industrial environments rely on high-reliability machinery. Unexpected mechanical failures lead to severe financial losses and safety hazards. This paper presents a multi-modal predictive maintenance architecture integrating computer vision, acoustic telemetry, and time-series sensor logs. We introduce a hybrid CNN-BiLSTM-Attention-XGBoost pipeline for visual process anomaly detection, achieving state-of-the-art results on the IPAD dataset. Additionally, an unsupervised Isolation Forest matches frequency-domain acoustic signals to fault models, while an optimized XGBoost Regressor predicts NASA Turbofan Remaining Useful Life (RUL). Our results demonstrate robust multi-modal diagnostics, validating the system's viability for safety-critical smart factory systems.
+                Modern industrial environments rely on high-reliability machinery. Unexpected mechanical failures lead to severe financial losses and safety hazards. This project presents a multi-modal predictive maintenance architecture integrating computer vision, acoustic telemetry, and time-series sensor logs. We introduce a hybrid CNN-BiLSTM-Attention-XGBoost pipeline for visual process anomaly detection, achieving state-of-the-art results on the IPAD dataset. Additionally, an unsupervised Isolation Forest matches frequency-domain acoustic signals to fault models, while an optimized XGBoost Regressor predicts NASA Turbofan Remaining Useful Life (RUL). Our results demonstrate robust multi-modal diagnostics, validating the system's viability for safety-critical smart factory systems.
               </p>
             </div>
           </motion.div>

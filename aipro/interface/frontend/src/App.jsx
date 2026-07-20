@@ -3,7 +3,7 @@ import LandingPage from './components/LandingPage';
 import VideoAnalyzer from './components/VideoAnalyzer';
 import AudioAnalyzer from './components/AudioAnalyzer';
 import RULAnalyzer from './components/RULAnalyzer';
-import ResearchPage from './components/ResearchPage';
+import MethodologyPage from './components/ResearchPage';
 import ArchitecturePage from './components/ArchitecturePage';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Info, X, ShieldAlert, Cpu, Database, BookOpen, Settings } from 'lucide-react';
@@ -35,10 +35,10 @@ function App() {
             Dashboard
           </button>
           <button 
-            onClick={() => setCurrentMode('research')}
-            className={`hover:text-white transition-colors ${currentMode === 'research' ? 'text-white border-b-2 border-purple-500 pb-1 pt-1' : ''}`}
+            onClick={() => setCurrentMode('methodology')}
+            className={`hover:text-white transition-colors ${currentMode === 'methodology' ? 'text-white border-b-2 border-purple-500 pb-1 pt-1' : ''}`}
           >
-            Research Paper
+            Methodology
           </button>
           <button 
             onClick={() => setCurrentMode('architecture')}
@@ -102,15 +102,15 @@ function App() {
           >
             <RULAnalyzer onBack={() => setCurrentMode('landing')} />
           </motion.div>
-        ) : currentMode === 'research' ? (
+        ) : currentMode === 'methodology' ? (
           <motion.div
-            key="research"
+            key="methodology"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3 }}
           >
-            <ResearchPage onBack={() => setCurrentMode('landing')} />
+            <MethodologyPage onBack={() => setCurrentMode('landing')} />
           </motion.div>
         ) : currentMode === 'architecture' ? (
           <motion.div
@@ -135,11 +135,11 @@ function App() {
           Dashboard
         </button>
         <button 
-          onClick={() => setCurrentMode('research')}
-          className={`flex flex-col items-center gap-1 ${currentMode === 'research' ? 'text-white' : ''}`}
+          onClick={() => setCurrentMode('methodology')}
+          className={`flex flex-col items-center gap-1 ${currentMode === 'methodology' ? 'text-white' : ''}`}
         >
           <BookOpen className="w-4 h-4" />
-          Research
+          Methodology
         </button>
         <button 
           onClick={() => setCurrentMode('architecture')}

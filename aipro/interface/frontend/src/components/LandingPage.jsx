@@ -104,7 +104,7 @@ const LandingPage = ({ onSelectMode }) => {
       <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full">
         <motion.div
           whileHover={{ scale: 1.02 }}
-          onClick={() => onSelectMode('research')}
+          onClick={() => onSelectMode('methodology')}
           className="glass p-6 rounded-2xl border-white/5 hover:border-purple-500/40 cursor-pointer transition-all flex items-center justify-between"
         >
           <div className="flex items-center gap-4 text-left">
@@ -112,8 +112,8 @@ const LandingPage = ({ onSelectMode }) => {
               <BookOpen className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <h4 className="font-bold text-sm">Read Research Overview</h4>
-              <p className="text-xs text-white/40">Technical paper structure, dataset specifications, and results validation.</p>
+              <h4 className="font-bold text-sm">Methodology & Results</h4>
+              <p className="text-xs text-white/40">System design, dataset specifications, and testing results validation.</p>
             </div>
           </div>
           <ChevronRight className="w-4 h-4 text-white/30" />
